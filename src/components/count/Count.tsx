@@ -1,6 +1,20 @@
 import "./Count.scss";
 
-const Count = ({ count, increase, decrease, changeValue, id }) => {
+interface CountProps {
+  count: number;
+  increase: (id: number) => void;
+  decrease: (id: number) => void;
+  changeValue: (id: number, value: number) => void;
+  id: number;
+}
+
+const Count: React.FC<CountProps> = ({
+  count,
+  increase,
+  decrease,
+  changeValue,
+  id,
+}) => {
   return (
     <div className="count">
       <div className="count__box">

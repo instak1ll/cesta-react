@@ -1,68 +1,73 @@
+import { useEffect, useState } from "react";
 import CartFooter from "../cartFooter/CartFooter";
 import CartHeader from "../cartHeader/CartHeader";
 import CartProduct from "../cartProduct/CartProduct";
 import "./Cart.scss";
 import data from "./../../data";
-import { useEffect, useState } from "react";
 
 const Cart = () => {
   const [cart, setCart] = useState(data);
 
-  const [total, settotal] = useState({
+  type Total = {
+    price: number;
+    count: number;
+  };
+
+  const [total, setTotal] = useState<Total>({
     price: cart.reduce((a, b) => a + b.priceTotal, 0),
     count: cart.reduce((a, b) => a + b.count, 0),
   });
 
   useEffect(() => {
-    settotal({
+    setTotal({
       price: cart.reduce((a, b) => a + b.priceTotal, 0),
       count: cart.reduce((a, b) => a + b.count, 0),
     });
   }, [cart]);
 
-  const deleteProduct = (id) => {
+  const deleteProduct = (id: number) => {
     console.log("delete", id);
-    setCart((cart) => cart.filter((product) => id !== product.id));
+    setCart((prevCart) => prevCart.filter((product) => id !== product.id));
   };
 
-  const increase = (id) => {
+  const increase = (id: number) => {
     console.log("increase", id);
-    setCart((cart) => {
-      return cart.map((product) => {
+    setCart((prevCart) =>
+      prevCart.map((product) => {
         if (product.id === id) {
           return {
             ...product,
-            count: (product.count += 1),
-            priceTotal: product.count * product.price,
+            count: product.count + 1,
+            priceTotal: (product.count + 1) * product.price,
           };
         }
         return product;
-      });
-    });
+      })
+    );
   };
 
-  const decrease = (id) => {
+  const decrease = (id: number) => {
     console.log("decrease", id);
-    setCart((cart) => {
-      return cart.map((product) => {
+    setCart((prevCart) =>
+      prevCart.map((product) => {
         if (product.id === id) {
+          const newCount = Math.max(product.count - 1, 1);
+          const newPriceTotal =
+            newCount !== 1 ? newCount * product.price : product.priceTotal;
           return {
             ...product,
-            count: product.count - 1 > 1 ? (product.count -= 1) : 1,
-            priceTotal:
-              product.count !== 1
-                ? (product.priceTotal -= product.price)
-                : product.priceTotal,
+            count: newCount,
+            priceTotal: newPriceTotal,
           };
         }
         return product;
-      });
-    });
+      })
+    );
   };
 
-  const changeValue = (id, value) => {
-    setCart((cart) => {
-      return cart.map((product) => {
+  const changeValue = (id: number, value: number) => {
+    setCart((prevCart) =>
+      prevCart.map((product) => {
         if (product.id === id) {
           return {
             ...product,
@@ -71,22 +76,21 @@ const Cart = () => {
           };
         }
         return product;
-      });
-    });
+      })
+    );
   };
 
-  const products = cart.map((product) => {
-    return (
-      <CartProduct
-        product={product}
-        key={product.id}
-        deleteProduct={deleteProduct}
-        increase={increase}
-        decrease={decrease}
-        changeValue={changeValue}
-      />
-    );
-  });
+  const products = cart.map((product) => (
+    <CartProduct
+      product={product}
+      key={product.id}
+      deleteProduct={deleteProduct}
+      increase={increase}
+      decrease={decrease}
+      changeValue={changeValue}
+    />
+  ));
+
   return (
     <section className="cart">
       <CartHeader />

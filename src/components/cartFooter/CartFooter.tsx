@@ -1,7 +1,14 @@
 import "./CartFooter.scss";
 import priceForm from "./../utils/priceForm";
 
-const CartFooter = ({ total }) => {
+interface CartFooterProps {
+  total: {
+    count: number;
+    price: number;
+  };
+}
+
+const CartFooter: React.FC<CartFooterProps> = ({ total }) => {
   const { count, price } = total;
   return (
     <footer className="cart-footer">

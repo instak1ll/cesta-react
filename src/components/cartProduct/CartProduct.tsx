@@ -1,9 +1,23 @@
-import BtnDlt from "../btnDlt/BtnDlt";
-import Count from "../count/Count";
 import "./CartProduct.scss";
 import priceForm from "./../utils/priceForm";
+import BtnDlt from "../btnDlt/BtnDlt";
+import Count from "../count/Count";
 
-const CartProduct = ({
+interface CartProductProps {
+  product: {
+    img: string;
+    title: string;
+    priceTotal: number;
+    count: number;
+    id: number;
+  };
+  deleteProduct: (id: number) => void;
+  increase: (id: number) => void;
+  decrease: (id: number) => void;
+  changeValue: (id: number, value: number) => void;
+}
+
+const CartProduct: React.FC<CartProductProps> = ({
   product,
   deleteProduct,
   increase,

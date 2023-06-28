@@ -1,4 +1,9 @@
-const BtnDlt = ({ deleteProduct, id }) => {
+type BtnDltProps = {
+  deleteProduct: (id: number) => void;
+  id: number;
+};
+
+const BtnDlt: React.FC<BtnDltProps> = ({ deleteProduct, id }) => {
   return (
     <button
       type="button"
